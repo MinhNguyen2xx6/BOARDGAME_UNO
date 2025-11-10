@@ -18,7 +18,6 @@
 ### 2. Clone source code
 ```
 git clone https://github.com/MinhNguyen2xx6/BOARDGAME_UNO.git
-
 cd BOARDGAME_UNO
 ```
 3. Cấu trúc project
