@@ -17,9 +17,9 @@
 
 ### 2. Clone source code
 
-'git clone https://github.com/MinhNguyen2xx6/BOARDGAME_UNO.git
+`git clone https://github.com/MinhNguyen2xx6/BOARDGAME_UNO.git
 
-cd BOARDGAME_UNO'
+cd BOARDGAME_UNO`
 
 3. Cấu trúc project
 + UNO_Server – chương trình Server (Console App).
