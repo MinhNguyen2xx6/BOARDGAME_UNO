@@ -1,6 +1,6 @@
 # BOARDGAME_UNO
 ## Hướng dẫn cấu hình, cài đặt và chạy app
-1. Yêu cầu hệ thống
+### 1. Yêu cầu hệ thống
 - Hệ điều hành: Windows 10/11.
 - Ngôn ngữ: C# (.NET Framework 4.8)
 - IDE: Visual Studio 2022 hoặc mới hơn
