@@ -9,9 +9,9 @@
 
 -Thư viện ngoài:
 
-+System.Net.Sockets
++`System.Net.Sockets`
 
-+Newtonsoft.Json
++`Newtonsoft.Json`
 
 -Kết nối mạng: Cùng mạng LAN.
 
@@ -27,11 +27,12 @@ cd BOARDGAME_UNO
 
 -Mở file `BOARDGAME_UNO.sln` bằng Visual Studio.
 
-4. Cấu hình mạng
-- Ứng dụng sử dụng TCP Socket nên cần thiết lập IP và Port cho kết nối.
+### 4. Cấu hình mạng
+-Ứng dụng sử dụng TCP Socket nên cần thiết lập IP và Port cho kết nối.
 
-5. Cách chạy chương trình
-- Bước 1: Chạy Server
+### 5. Cách chạy chương trình
+-Bước 1: Chạy Server
+
 + Trong Visual Studio, chuột phải UNO_Server → Set as Startup Project.
 + Nhấn Ctrl + F5 để chạy.
 
