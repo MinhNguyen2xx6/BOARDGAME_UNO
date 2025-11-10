@@ -33,6 +33,15 @@ cd BOARDGAME_UNO
 ### 5. Cách chạy chương trình
 -Bước 1: Chạy Server
 
-+ Trong Visual Studio, chuột phải UNO_Server → Set as Startup Project.
-+ Nhấn Ctrl + F5 để chạy.
++Trong Visual Studio, chuột phải `UNO_Server` → Set as Startup Project.
+
++Nhấn `Ctrl + F5` để chạy.
+
+-Bước 2: Chạy Client
+
++Chuột phải `UNO_Client` → Set as Startup Project.
+
++Nhấn `Ctrl + F5` để khởi động.
+
+-Ở giao diện Login, nhập IP và Port của server.
 
