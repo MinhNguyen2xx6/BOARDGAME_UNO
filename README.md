@@ -4,14 +4,21 @@
 -Hệ điều hành: Windows 10/11.
 
 -Ngôn ngữ: C# (.NET Framework 4.8).
-IDE: Visual Studio 2022 hoặc mới hơn
-Thư viện ngoài:
-+ System.Net.Sockets
-+ Newtonsoft.Json 
-Kết nối mạng: Cùng mạng LAN.
 
-2. Clone source code
+-IDE: Visual Studio 2022 hoặc mới hơn.
+
+-Thư viện ngoài:
+
++System.Net.Sockets
+
++Newtonsoft.Json
+
+-Kết nối mạng: Cùng mạng LAN.
+
+### 2. Clone source code
+
 git clone https://github.com/MinhNguyen2xx6/BOARDGAME_UNO.git
+
 cd BOARDGAME_UNO
 
 3. Cấu trúc project
