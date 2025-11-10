@@ -20,10 +20,12 @@
 git clone https://github.com/MinhNguyen2xx6/BOARDGAME_UNO.git
 cd BOARDGAME_UNO
 ```
-3. Cấu trúc project
-+ UNO_Server – chương trình Server (Console App).
-+ UNO_Client – chương trình Client (WinForms).
-- Mở file BOARDGAME_UNO.sln bằng Visual Studio.
+### 3. Cấu trúc project
++UNO_Server – chương trình Server (Console App).
+
++UNO_Client – chương trình Client (WinForms).
+
+-Mở file `BOARDGAME_UNO.sln` bằng Visual Studio.
 
 4. Cấu hình mạng
 - Ứng dụng sử dụng TCP Socket nên cần thiết lập IP và Port cho kết nối.
