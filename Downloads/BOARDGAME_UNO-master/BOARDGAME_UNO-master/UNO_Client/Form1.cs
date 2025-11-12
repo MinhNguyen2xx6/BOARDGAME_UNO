@@ -85,8 +85,7 @@ namespace UNO_Client
                     Session.UserEmail = result.email;
 
                     MessageBox.Show("Đăng nhập thành công!,Chuyển sang giao diện lobby ");
-                    Lobby sanh = new Lobby();                                                   //thực hiện mở form lobby và đóng lại form đăng nhập
-                    sanh.Show();
+                   
                     Hide();
                 }
                 else

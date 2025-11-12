@@ -63,6 +63,26 @@ namespace UNO_Client.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap d841d3fa_a631_4ecb_af3c_5c6cdbea61a4 {
+            get {
+                object obj = ResourceManager.GetObject("d841d3fa-a631-4ecb-af3c-5c6cdbea61a4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap GIao_diện_form_lobby {
+            get {
+                object obj = ResourceManager.GetObject("GIao diện form lobby", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap luat_choi_huong_dan_choi_board_game_uno_co_ban_cho_nguoi_moi_choi_202112301351216807 {
             get {
                 object obj = ResourceManager.GetObject("luat-choi-huong-dan-choi-board-game-uno-co-ban-cho-nguoi-moi-choi-202112301351216" +
