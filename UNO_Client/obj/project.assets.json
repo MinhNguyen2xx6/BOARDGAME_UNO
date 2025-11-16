@@ -55,23 +55,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ADMIN\\.nuget\\packages\\": {},
+    "C:\\Users\\ACER\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\BOARDGAME_UNO-QPhuc-patch\\UNO_Client\\UNO_Client.csproj",
+      "projectUniqueName": "D:\\UIT_ER\\HK3\\LTM\\BOARDGAME_UNO\\MinhNguyen2xx6\\BOARDGAME_UNO\\UNO_Client\\UNO_Client.csproj",
       "projectName": "UNO_Client",
-      "projectPath": "D:\\BOARDGAME_UNO-QPhuc-patch\\UNO_Client\\UNO_Client.csproj",
-      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "D:\\BOARDGAME_UNO-QPhuc-patch\\UNO_Client\\obj\\",
+      "projectPath": "D:\\UIT_ER\\HK3\\LTM\\BOARDGAME_UNO\\MinhNguyen2xx6\\BOARDGAME_UNO\\UNO_Client\\UNO_Client.csproj",
+      "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
+      "outputPath": "D:\\UIT_ER\\HK3\\LTM\\BOARDGAME_UNO\\MinhNguyen2xx6\\BOARDGAME_UNO\\UNO_Client\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ACER\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -128,7 +128,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.307/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
