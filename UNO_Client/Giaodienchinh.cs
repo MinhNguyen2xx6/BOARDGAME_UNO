@@ -61,11 +61,8 @@ namespace UNO_Client
                 this.Show();
                 this.BringToFront();
             }
-            else
-            {
-                // Auto login thất bại, quay lại login
-            }
         }
+
         //Menu hien thi khi bam vao lai ten
         private void ShowProfileMenu(object sender)
         {

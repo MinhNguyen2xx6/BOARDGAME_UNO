@@ -20,34 +20,22 @@ namespace UNO_Client
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            try
+            var saved = TokenStorage.LoadToken();
+
+            if (saved == null || string.IsNullOrEmpty(saved.RefreshToken))
+                return;
+
+            bool success = await AutoLogin(saved.RefreshToken);
+
+            _mainForm.HandleAutoLoginResult(success);
+
+            if (success)
             {
-                var saved = TokenStorage.LoadToken();
-
-                if (saved != null && !string.IsNullOrEmpty(saved.RefreshToken))
-                {
-                    // Thử auto login
-                    var success = await AutoLogin(saved.RefreshToken);
-
-                    // Thông báo kết quả cho form chính
-                    _mainForm.HandleAutoLoginResult(success);
-
-                    if (success)
-                    {
-                        this.Hide(); // Ẩn form login
-                        return;
-                    }
-                    else
-                    {
-                        // Auto login thất bại, hiển thị thông báo
-                        MessageBox.Show("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-                    }
-                }
+                this.Hide();
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Lỗi auto login: {ex.Message}");
-                // Tiếp tục hiển thị form login bình thường
+                MessageBox.Show("Phiên đăng nhập hết hạn, vui lòng đăng nhập lại.");
             }
         }
 

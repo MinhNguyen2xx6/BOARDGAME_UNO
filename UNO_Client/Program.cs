@@ -1,4 +1,4 @@
-namespace UNO_Client
+﻿namespace UNO_Client
 {
     internal static class Program
     {
@@ -12,22 +12,24 @@ namespace UNO_Client
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             // Ki?m tra token tr??c khi t?o form
-            var token = TokenStorage.LoadToken();
-            if (token != null)
-            {
-                // C� token ? t?o form ch�nh tr??c
-                Giaodienchinh main = new Giaodienchinh();
-                Form1 login = new Form1(main);
+            Giaodienchinh main = new Giaodienchinh();
+            Form1 login = new Form1(main);
 
-                // Hi?n th? form ch�nh ngay l?p t?c (s? ???c c?p nh?t sau khi auto login)
-                main.Show();
-                Application.Run(); // Ch?y application context thay v� form c? th?
+            // Load token
+            var saved = TokenStorage.LoadToken();
+
+            if (saved != null && !string.IsNullOrEmpty(saved.RefreshToken))
+            {
+                // Gán tạm để giao diện chính nhận biết
+                Session.RefreshToken = saved.RefreshToken;
+                Session.UserEmail = saved.Email;
+
+                // Hiển thị form chính (auto login chạy tại Form1_Load)
+                Application.Run(main);
             }
             else
             {
-                // Kh�ng c� token ? ch?y login b�nh th??ng
-                Giaodienchinh main = new Giaodienchinh();
-                Form1 login = new Form1(main);
+                // Không có token → chạy thẳng form login
                 Application.Run(login);
             }
         }
