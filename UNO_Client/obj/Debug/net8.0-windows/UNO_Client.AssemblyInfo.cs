@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UNO_Client")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+afef7572a2bc7c1f2f6a144b637832a733fadf09")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+71321ba95d8b8365eef37814b046b3853d23f380")]
 [assembly: System.Reflection.AssemblyProductAttribute("UNO_Client")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UNO_Client")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
