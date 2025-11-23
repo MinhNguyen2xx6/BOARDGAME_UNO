@@ -208,11 +208,16 @@ namespace UNO_Client
                 MessageBox.Show("Tham gia phòng thành công!");
                 _currentRoomKey = room.name; // lưu phòng hiện tại
                 await LoadRooms();
+                FormGame gameForm = new FormGame(_currentRoomKey, room.Players);
+                gameForm.Show(); //Mở form trò chơi mới
+                this.Hide();
             }
             else
             {
                 MessageBox.Show("Không thể tham gia phòng!");
             }
+        
+
         }
 
         // Nút Thoát phòng
