@@ -145,6 +145,7 @@ namespace UNO_Client
         {
             Hand.Remove(card);
         }
+        public bool CalledUno { get; set; } = false; //(VQ) Đánh dấu player đã nhấn nút uno hay chưa.
     }
 
 
@@ -225,6 +226,33 @@ namespace UNO_Client
                 for (int i = 0; i < 7; i++)
                     player.DrawCard(Deck);
             }
+        }
+        public bool LastCardCallUno(Player player)
+        {
+            
+            if (player.Hand.Count == 1)
+            {
+                if (!player.CalledUno)  // (VQ) Người này còn 1 lá nhưng chưa bấm UNO.
+                {
+                   
+                    // Nhiệm vụ phạt code vào đây.
+
+                    Console.WriteLine($"{player.Name} còn 1 lá bài nhưng chưa bấm UNO!");
+                }
+            }
+            else if (player.Hand.Count == 0) // (VQ) Người này đánh hết bài. Kết thúc game.
+            {
+                
+                Console.WriteLine($"{player.Name} đã đánh hết bài!");
+                return true; // (VQ) Trả về true để người khác biết cần kết thúc game.
+            }
+
+            
+            player.CalledUno = false; // (VQ) Reset trạng thái UNO sau khi đánh bài.
+
+            
+
+            return false;
         }
 
         public void EndGame()
