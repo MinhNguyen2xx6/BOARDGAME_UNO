@@ -1,0 +1,13 @@
+###########################
+# Visual Studio & Build Files
+###########################
+
+# Cache và thiết lập cá nhân của Visual Studio
+.vs/
+
+# Thư mục chứa các file biên dịch (build output)
+[Bb]in/
+[Oo]bj/
+
+# Các file tạm thời của người dùng
+*.user

@@ -13,7 +13,7 @@ namespace UnoServer
     {
         static async Task Main(string[] args)
         {
-            var server = new UnoRoomServer(5000, "TestRoom");
+            var server = new UnoRoomServer(5000, "TestRoom"); //Tạo sever chạy trên port 500, tạo tên phòng là TestRoom
             await server.StartAsync();
 
             Console.WriteLine("Server đang chạy. Nhấn Enter để thoát...");
@@ -221,15 +221,17 @@ namespace UnoServer
                         break;
 
                     case "play":
-                        HandlePlay((string)msg.player,
-                            new UnoCard(Enum.Parse<UnoColor>((string)msg.card.color),
-                                        Enum.Parse<UnoValue>((string)msg.card.value)));
+                        string chosenColor = msg.chosenColor; // client gửi màu chọn khi đánh Wild
+                        var card = new UnoCard(Enum.Parse<UnoColor>((string)msg.card.color),
+                                               Enum.Parse<UnoValue>((string)msg.card.value));
+                        HandlePlay((string)msg.player, card, chosenColor);
                         break;
-
+                    case "pass":
+                        HandlePass((string)msg.player); //Thêm logic người chơi rút bài mà không thể đánh tiếp thì sẽ pass để báo bỏ lượt
+                        break;
                     case "draw":
                         HandleDraw((string)msg.player);
                         break;
-
                     case "uno":
                         var p = _room.Players.FirstOrDefault(x => x.Name == (string)msg.player);
                         if (p != null) p.CalledUno = true;
@@ -240,46 +242,82 @@ namespace UnoServer
             lock (_clients) { _clients.Remove(client); }
             client.Close();
         }
+        private void HandlePass(string playerName) //Hàm chuyển lượt nếu người chơi rút bài mà vẫn không có lá cần đánh
+        {
+            var current = _room.Players[_currentIndex];
+            if (current.Name != playerName) return;
 
-        private void HandlePlay(string playerName, UnoCard card)
+            // Chuyển lượt sang người kế tiếp
+            _currentIndex = (_clockwise ? (_currentIndex + 1) : (_currentIndex - 1 + _room.Players.Count)) % _room.Players.Count;
+
+            BroadcastState();
+        }
+        private void HandlePlay(string playerName, UnoCard card, string chosenColor = null)
         {
             if (_room.State != RoomState.Playing) return;
+
             var current = _room.Players[_currentIndex];
             if (current.Name != playerName) return;
 
             var logic = new UnoGameLogic();
             if (!logic.CanPlay(card, _room.TopCard)) return;
 
+            // Tìm lá trong tay
             var handCard = current.Hand.FirstOrDefault(c => c.Color == card.Color && c.Value == card.Value);
             if (handCard == null) return;
 
+            // Đánh lá
             current.PlayCard(handCard);
-            _room.TopCard = handCard;
-            logic.ApplySpecialEffect(handCard, _room.Players, ref _currentIndex, ref _clockwise, _room.Deck);
 
-            if (_room.LastCardCallUno(current))
-                _room.State = RoomState.Finished;
+            // Nếu là Wild/Wild+4 thì áp dụng màu được chọn
+            if (handCard.Color == UnoColor.Wild)
+            {
+                if (!string.IsNullOrEmpty(chosenColor))
+                {
+                    _room.TopCard = new UnoCard(Enum.Parse<UnoColor>(chosenColor), handCard.Value);
+                }
+                else
+                {
+                    // Nếu client không gửi màu thì mặc định giữ Wild
+                    _room.TopCard = handCard;
+                }
+            }
             else
+            {
+                _room.TopCard = handCard;
+            }
+
+            // Áp dụng hiệu ứng đặc biệt
+            logic.ApplySpecialEffect(_room.TopCard, _room.Players, ref _currentIndex, ref _clockwise, _room.Deck);
+
+            // Kiểm tra UNO hoặc thắng
+            if (_room.LastCardCallUno(current))
+            {
+                _room.State = RoomState.Finished;
+            }
+            else
+            {
+                // KHÔNG auto chuyển lượt nếu vừa rút xong hoặc bị DrawTwo/Wild+4
+                // Chỉ chuyển lượt khi không còn hành động nào khác
                 _currentIndex = (_clockwise ? (_currentIndex + 1) : (_currentIndex - 1 + _room.Players.Count)) % _room.Players.Count;
+            }
 
             BroadcastState();
         }
+
 
         private void HandleDraw(string playerName)
         {
             var current = _room.Players[_currentIndex];
             if (current.Name != playerName) return;
 
-            // Rút 1 lá nếu còn
             var card = _room.Deck.DrawCard();
             if (card != null) current.Hand.Add(card);
 
-            // Chuyển lượt
-            _currentIndex = (_clockwise ? (_currentIndex + 1) : (_currentIndex - 1 + _room.Players.Count)) % _room.Players.Count;
-
-            // Cập nhật cho tất cả client
+            // (Fix lại) KHÔNG chuyển lượt ngay, để người chơi có thể đánh tiếp nếu muốn
             BroadcastState();
         }
+
         private void BroadcastState()
         {
             // If game hasn't started or there is no top card yet, guard.

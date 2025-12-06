@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ltmcb\\tes\\tes\\tes.csproj": {}
+    "D:\\UIT_ER\\HK3\\LTM\\BOARDGAME_UNO\\MinhNguyen2xx6\\BOARDGAME_UNO\\tes\\tes.csproj": {}
   },
   "projects": {
-    "D:\\ltmcb\\tes\\tes\\tes.csproj": {
+    "D:\\UIT_ER\\HK3\\LTM\\BOARDGAME_UNO\\MinhNguyen2xx6\\BOARDGAME_UNO\\tes\\tes.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ltmcb\\tes\\tes\\tes.csproj",
+        "projectUniqueName": "D:\\UIT_ER\\HK3\\LTM\\BOARDGAME_UNO\\MinhNguyen2xx6\\BOARDGAME_UNO\\tes\\tes.csproj",
         "projectName": "tes",
-        "projectPath": "D:\\ltmcb\\tes\\tes\\tes.csproj",
+        "projectPath": "D:\\UIT_ER\\HK3\\LTM\\BOARDGAME_UNO\\MinhNguyen2xx6\\BOARDGAME_UNO\\tes\\tes.csproj",
         "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
-        "outputPath": "D:\\ltmcb\\tes\\tes\\obj\\",
+        "outputPath": "D:\\UIT_ER\\HK3\\LTM\\BOARDGAME_UNO\\MinhNguyen2xx6\\BOARDGAME_UNO\\tes\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
