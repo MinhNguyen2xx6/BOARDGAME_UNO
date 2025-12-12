@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -58,6 +59,7 @@
             tb_matkhau = new Guna.UI2.WinForms.Guna2TextBox();
             tb_taikhoan = new Guna.UI2.WinForms.Guna2TextBox();
             guna2PictureBox2 = new Guna.UI2.WinForms.Guna2PictureBox();
+            guna2Elipse1 = new Guna.UI2.WinForms.Guna2Elipse(components);
             guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)guna2PictureBox1).BeginInit();
             guna2Panel2.SuspendLayout();
@@ -69,10 +71,11 @@
             guna2Panel1.Controls.Add(guna2PictureBox1);
             guna2Panel1.CustomizableEdges = customizableEdges3;
             guna2Panel1.Dock = DockStyle.Right;
-            guna2Panel1.Location = new Point(689, 0);
+            guna2Panel1.Location = new Point(551, 0);
+            guna2Panel1.Margin = new Padding(2);
             guna2Panel1.Name = "guna2Panel1";
             guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            guna2Panel1.Size = new Size(300, 535);
+            guna2Panel1.Size = new Size(240, 428);
             guna2Panel1.TabIndex = 9;
             // 
             // guna2PictureBox1
@@ -82,9 +85,10 @@
             guna2PictureBox1.Image = Properties.Resources.Background_hcn;
             guna2PictureBox1.ImageRotate = 0F;
             guna2PictureBox1.Location = new Point(0, 0);
+            guna2PictureBox1.Margin = new Padding(2);
             guna2PictureBox1.Name = "guna2PictureBox1";
             guna2PictureBox1.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            guna2PictureBox1.Size = new Size(300, 535);
+            guna2PictureBox1.Size = new Size(240, 428);
             guna2PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             guna2PictureBox1.TabIndex = 0;
             guna2PictureBox1.TabStop = false;
@@ -102,9 +106,10 @@
             guna2Panel2.CustomizableEdges = customizableEdges19;
             guna2Panel2.Dock = DockStyle.Left;
             guna2Panel2.Location = new Point(0, 0);
+            guna2Panel2.Margin = new Padding(2);
             guna2Panel2.Name = "guna2Panel2";
             guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges20;
-            guna2Panel2.Size = new Size(696, 535);
+            guna2Panel2.Size = new Size(557, 428);
             guna2Panel2.TabIndex = 10;
             // 
             // tb_thongbao
@@ -121,14 +126,14 @@
             tb_thongbao.Font = new Font("Segoe UI", 9F);
             tb_thongbao.ForeColor = Color.Red;
             tb_thongbao.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
-            tb_thongbao.Location = new Point(158, 332);
-            tb_thongbao.Margin = new Padding(4, 5, 4, 5);
+            tb_thongbao.Location = new Point(126, 266);
+            tb_thongbao.Margin = new Padding(3, 4, 3, 4);
             tb_thongbao.Name = "tb_thongbao";
             tb_thongbao.PlaceholderText = "";
             tb_thongbao.ReadOnly = true;
             tb_thongbao.SelectedText = "";
             tb_thongbao.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            tb_thongbao.Size = new Size(411, 39);
+            tb_thongbao.Size = new Size(329, 31);
             tb_thongbao.TabIndex = 14;
             // 
             // btn_quenmk
@@ -146,10 +151,11 @@
             btn_quenmk.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_quenmk.ForeColor = Color.White;
             btn_quenmk.HoverState.FillColor = Color.FromArgb(94, 148, 255);
-            btn_quenmk.Location = new Point(232, 455);
+            btn_quenmk.Location = new Point(182, 353);
+            btn_quenmk.Margin = new Padding(2);
             btn_quenmk.Name = "btn_quenmk";
             btn_quenmk.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            btn_quenmk.Size = new Size(168, 52);
+            btn_quenmk.Size = new Size(143, 55);
             btn_quenmk.TabIndex = 13;
             btn_quenmk.Text = "Quên mật khẩu";
             btn_quenmk.Click += btn_quenmk_Click_1;
@@ -169,10 +175,11 @@
             btn_dk.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_dk.ForeColor = Color.White;
             btn_dk.HoverState.FillColor = Color.FromArgb(193, 20, 137);
-            btn_dk.Location = new Point(343, 379);
+            btn_dk.Location = new Point(266, 303);
+            btn_dk.Margin = new Padding(2);
             btn_dk.Name = "btn_dk";
             btn_dk.ShadowDecoration.CustomizableEdges = customizableEdges10;
-            btn_dk.Size = new Size(123, 52);
+            btn_dk.Size = new Size(106, 42);
             btn_dk.TabIndex = 12;
             btn_dk.Text = "Đăng ký";
             btn_dk.Click += btn_dk_Click_1;
@@ -195,18 +202,18 @@
             btn_dangnhap.HoverState.BorderColor = Color.FromArgb(193, 20, 137);
             btn_dangnhap.HoverState.FillColor = Color.FromArgb(193, 20, 137);
             btn_dangnhap.HoverState.ForeColor = Color.White;
-            btn_dangnhap.Location = new Point(169, 379);
+            btn_dangnhap.Location = new Point(135, 303);
+            btn_dangnhap.Margin = new Padding(2);
             btn_dangnhap.Name = "btn_dangnhap";
             btn_dangnhap.PressedColor = Color.FromArgb(193, 20, 137);
             btn_dangnhap.ShadowDecoration.CustomizableEdges = customizableEdges12;
-            btn_dangnhap.Size = new Size(123, 52);
+            btn_dangnhap.Size = new Size(106, 42);
             btn_dangnhap.TabIndex = 11;
             btn_dangnhap.Text = "Đăng nhập";
             btn_dangnhap.Click += btn_dangnhap_Click_1;
             // 
             // tb_matkhau
             // 
-            tb_matkhau.Animated = true;
             tb_matkhau.BorderColor = Color.FromArgb(94, 148, 255);
             tb_matkhau.BorderRadius = 8;
             tb_matkhau.Cursor = Cursors.IBeam;
@@ -222,20 +229,18 @@
             tb_matkhau.ForeColor = Color.White;
             tb_matkhau.HoverState.BorderColor = Color.FromArgb(234, 153, 149);
             tb_matkhau.HoverState.ForeColor = Color.White;
-            tb_matkhau.Location = new Point(169, 260);
-            tb_matkhau.Margin = new Padding(4, 5, 4, 5);
+            tb_matkhau.Location = new Point(135, 208);
+            tb_matkhau.Margin = new Padding(3, 4, 3, 4);
             tb_matkhau.Name = "tb_matkhau";
             tb_matkhau.PlaceholderForeColor = Color.White;
             tb_matkhau.PlaceholderText = "Mật khẩu";
             tb_matkhau.SelectedText = "";
             tb_matkhau.ShadowDecoration.CustomizableEdges = customizableEdges14;
-            tb_matkhau.Size = new Size(297, 62);
+            tb_matkhau.Size = new Size(238, 50);
             tb_matkhau.TabIndex = 10;
             // 
             // tb_taikhoan
             // 
-            tb_taikhoan.Animated = true;
-            tb_taikhoan.AutoCompleteSource = AutoCompleteSource.CustomSource;
             tb_taikhoan.BorderColor = Color.FromArgb(94, 148, 255);
             tb_taikhoan.BorderRadius = 8;
             tb_taikhoan.Cursor = Cursors.IBeam;
@@ -251,14 +256,14 @@
             tb_taikhoan.ForeColor = Color.White;
             tb_taikhoan.HoverState.BorderColor = Color.FromArgb(234, 153, 149);
             tb_taikhoan.HoverState.ForeColor = Color.White;
-            tb_taikhoan.Location = new Point(169, 165);
-            tb_taikhoan.Margin = new Padding(4, 5, 4, 5);
+            tb_taikhoan.Location = new Point(135, 132);
+            tb_taikhoan.Margin = new Padding(3, 4, 3, 4);
             tb_taikhoan.Name = "tb_taikhoan";
             tb_taikhoan.PlaceholderForeColor = Color.White;
             tb_taikhoan.PlaceholderText = "Email";
             tb_taikhoan.SelectedText = "";
             tb_taikhoan.ShadowDecoration.CustomizableEdges = customizableEdges16;
-            tb_taikhoan.Size = new Size(297, 62);
+            tb_taikhoan.Size = new Size(238, 50);
             tb_taikhoan.TabIndex = 9;
             // 
             // guna2PictureBox2
@@ -267,24 +272,30 @@
             guna2PictureBox2.CustomizableEdges = customizableEdges17;
             guna2PictureBox2.Image = Properties.Resources.uno_classic_logo;
             guna2PictureBox2.ImageRotate = 0F;
-            guna2PictureBox2.Location = new Point(258, 12);
+            guna2PictureBox2.Location = new Point(206, 10);
+            guna2PictureBox2.Margin = new Padding(2);
             guna2PictureBox2.Name = "guna2PictureBox2";
             guna2PictureBox2.ShadowDecoration.CustomizableEdges = customizableEdges18;
-            guna2PictureBox2.Size = new Size(128, 132);
+            guna2PictureBox2.Size = new Size(102, 106);
             guna2PictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             guna2PictureBox2.TabIndex = 8;
             guna2PictureBox2.TabStop = false;
             // 
+            // guna2Elipse1
+            // 
+            guna2Elipse1.BorderRadius = 10;
+            guna2Elipse1.TargetControl = this;
+            // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(989, 535);
+            ClientSize = new Size(791, 428);
             Controls.Add(guna2Panel2);
             Controls.Add(guna2Panel1);
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            Margin = new Padding(4);
+            FormBorderStyle = FormBorderStyle.None;
             Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             Load += Form1_Load;
             guna2Panel1.ResumeLayout(false);
@@ -305,5 +316,6 @@
         private Guna.UI2.WinForms.Guna2Button btn_dk;
         private Guna.UI2.WinForms.Guna2Button btn_quenmk;
         private Guna.UI2.WinForms.Guna2TextBox tb_thongbao;
+        private Guna.UI2.WinForms.Guna2Elipse guna2Elipse1;
     }
 }

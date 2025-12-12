@@ -97,7 +97,7 @@ namespace UNO_Client
 
         private void btn_play_Click_1(object sender, EventArgs e)
         {
-            Lobby sanh = new Lobby(this);
+            FormLobby sanh = new FormLobby(this);
             sanh.Show();
             Hide();
         }

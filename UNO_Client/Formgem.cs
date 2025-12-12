@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace UNO_Client
 {
-    public partial class Formgem : Form
+    public partial class FormGame : Form
     {
-        public Formgem()
+        public FormGame(string roomName, List<string> players)
         {
             InitializeComponent();
             LoadBG();

@@ -88,7 +88,44 @@ namespace UNO_Client
             string password = tb_matkhau.Text; // đưa tk mk từ text box vào thành chuỗi
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
-                tb_thongbao.Text = "Vui lòng nhập đầy đủ thông tin!";
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin!");
+                return;
+            }
+            // kiểm tra xem chuỗi có rỗng hay không
+            try
+            {
+                var user = new { email = email, password = password, returnSecureToken = true }; // tạo một biến user mang thông tin
+                string json = JsonConvert.SerializeObject(user); // chuyển hóa thành file json
+                var content = new StringContent(json, Encoding.UTF8, "application/json"); // tạo biến content để gửi đi
+
+                var response = await client.PostAsync($"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={apiKey}", content); //gửi yêu cầu đăng ký tới fire base
+                var data = await response.Content.ReadAsStringAsync(); // dữ liệu phản hồi của fire base
+
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Tạo tài khoản thành công!");
+                }
+                else
+                {
+                    dynamic error = JsonConvert.DeserializeObject(data);
+                    MessageBox.Show("Lỗi: " + error["error"]["message"]);
+                }
+                //kiểm tra kết quả trả về
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi kết nối: " + ex.Message);
+            }
+            //trường hợp lõi kết nối
+        }
+
+        private async void btn_dangnhap_Click(object sender, EventArgs e)
+        {
+            string email = tb_taikhoan.Text;
+            string password = tb_matkhau.Text; // đưa tk mk từ text box vào thành chuỗi
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin!");
                 return;
             }
             // kiểm tra xem chuỗi có rỗng hay không
@@ -123,7 +160,7 @@ namespace UNO_Client
                 else
                 {
                     dynamic error = JsonConvert.DeserializeObject(data);
-                    tb_thongbao.Text = "Sai mật khẩu, tài khoản không chính xác";           //đưa ra lỗi nếu không đăng nhập thành công
+                    MessageBox.Show("Sai mật khẩu, tài khoản không chính xác");           //đưa ra lỗi nếu không đăng nhập thành công
                 }
                 //kiểm tra kết quả trả về
             }
