@@ -12,26 +12,14 @@
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             // Ki?m tra token tr??c khi t?o form
-            Giaodienchinh main = new Giaodienchinh();
-            Form1 login = new Form1(main);
+            Giaodienchinh mainForm = new Giaodienchinh();
 
-            // Load token
-            var saved = TokenStorage.LoadToken();
+            // Tạo form đăng nhập, truyền form chính vào
+            Form1 loginForm = new Form1(mainForm);
 
-            if (saved != null && !string.IsNullOrEmpty(saved.RefreshToken))
-            {
-                // Gán tạm để giao diện chính nhận biết
-                Session.RefreshToken = saved.RefreshToken;
-                Session.UserEmail = saved.Email;
+            // Chạy form đăng nhập trước
+            Application.Run(loginForm);
 
-                // Hiển thị form chính (auto login chạy tại Form1_Load)
-                Application.Run(main);
-            }
-            else
-            {
-                // Không có token → chạy thẳng form login
-                Application.Run(login);
-            }
         }
     }
 }

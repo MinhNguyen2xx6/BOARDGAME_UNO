@@ -93,9 +93,11 @@ namespace UNO_Client
                 UpdateUI();
             }
         }
-        private void btn_Play_Click(object sender, EventArgs e)
+       
+
+        private void btn_play_Click_1(object sender, EventArgs e)
         {
-            Lobby sanh = new Lobby(this);                                                  
+            Lobby sanh = new Lobby(this);
             sanh.Show();
             Hide();
         }

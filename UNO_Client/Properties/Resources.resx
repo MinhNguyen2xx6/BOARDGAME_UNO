@@ -118,8 +118,50 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Red_Skip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Red_Skip.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="uno-classic-logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\uno-classic-logo.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="46f48e80a6b222f1b1aec87757bc11" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\46f48e80a6b222f1b1aec87757bc11.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="luat-choi-huong-dan-choi-board-game-uno-co-ban-cho-nguoi-moi-choi-2021123013512168071" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\luat-choi-huong-dan-choi-board-game-uno-co-ban-cho-nguoi-moi-choi-2021123013512168071.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Background-hcn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Background-hcn.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Green_6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Green_6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Red_9" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Red_9.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Wild_Draw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Wild_Draw.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Red_Skip1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Red_Skip.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Blue_Skip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Blue_Skip.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Background" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Background.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Yellow_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Yellow_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Blue_Draw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Blue_Draw.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Blue_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Blue_3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Wild" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Wild.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="GIao diện form lobby" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\GIao diện form lobby.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -127,7 +169,19 @@
   <data name="luat-choi-huong-dan-choi-board-game-uno-co-ban-cho-nguoi-moi-choi-202112301351216807" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\luat-choi-huong-dan-choi-board-game-uno-co-ban-cho-nguoi-moi-choi-202112301351216807.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Green_Skip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Green_Skip.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pause.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="d841d3fa-a631-4ecb-af3c-5c6cdbea61a4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\d841d3fa-a631-4ecb-af3c-5c6cdbea61a4.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Yellow_Skip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Yellow_Skip.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Yellow_Reverse" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Yellow_Reverse.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

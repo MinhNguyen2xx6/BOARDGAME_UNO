@@ -81,6 +81,10 @@ namespace UNO_Client
                 MessageBox.Show("Tạo phòng thành công!");
                 _currentRoomKey = name; // lưu phòng hiện tại
                 await LoadRooms();
+                FormGame gameForm = new FormGame(_currentRoomKey, room.Players);
+                gameForm.Show();
+                this.Hide();
+
             }
             else
             {
@@ -157,7 +161,7 @@ namespace UNO_Client
         private async void button1_Click(object sender, EventArgs e)
         {
             // Nếu đang ở trong phòng thì không được join thêm
-            if (_currentRoomKey != null)
+            if (!string.IsNullOrEmpty(_currentRoomKey))
             {
                 MessageBox.Show("Bạn đang ở trong một phòng, hãy thoát trước khi tham gia phòng khác!");
                 return;
@@ -173,14 +177,13 @@ namespace UNO_Client
             int idx = selectedText.LastIndexOf('(');
             string roomName = idx > 0 ? selectedText.Substring(0, idx).Trim() : selectedText.Trim();
 
-            if (!_roomsCache.TryGetValue(roomName, out var room))
+            if (!_roomsCache.TryGetValue(roomName, out var room) || room == null)
             {
                 MessageBox.Show("Không tìm thấy phòng!");
                 return;
             }
 
-            if (room.Players == null)
-                room.Players = new List<string>();
+            room.Players ??= new List<string>();
 
             if (room.Players.Contains(Session.UserEmail))
             {
@@ -196,27 +199,35 @@ namespace UNO_Client
 
             room.Players.Add(Session.UserEmail);
 
-            string json = JsonConvert.SerializeObject(room);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await client.PutAsync(
-                $"{firebaseUrl}/rooms/{room.name}.json?auth={Session.IdToken}",
-                content);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                MessageBox.Show("Tham gia phòng thành công!");
-                _currentRoomKey = room.name; // lưu phòng hiện tại
-                await LoadRooms();
-                FormGame gameForm = new FormGame(_currentRoomKey, room.Players);
-                gameForm.Show(); //Mở form trò chơi mới
-                this.Hide();
+                string json = JsonConvert.SerializeObject(room);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await client.PutAsync(
+                    $"{firebaseUrl}/rooms/{room.name}.json?auth={Session.IdToken}",
+                    content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Tham gia phòng thành công!");
+                    _currentRoomKey = room.name; // lưu phòng hiện tại
+                    await LoadRooms();
+
+                    FormGame gameForm = new FormGame(_currentRoomKey, room.Players);
+                    gameForm.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Không thể tham gia phòng!\n{response.StatusCode}\n{responseBody}");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Không thể tham gia phòng!");
+                MessageBox.Show($"Lỗi khi join phòng: {ex.Message}");
             }
-        
 
         }
 
