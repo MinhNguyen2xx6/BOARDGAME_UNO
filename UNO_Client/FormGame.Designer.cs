@@ -1,157 +1,178 @@
-﻿namespace UNO_Client
+﻿using Guna;
+namespace UNO_Client
 {
     partial class FormGame
     {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        private System.Windows.Forms.ListBox lstMyHand;
-        private System.Windows.Forms.Label lblTopCard;
-        private System.Windows.Forms.Label lblTurn;
-        private System.Windows.Forms.Button btnPlay;
-        private System.Windows.Forms.Button btnDraw;
-        private System.Windows.Forms.Button btnUno;
-
-        private System.Windows.Forms.Label lblPlayer1;
-        private System.Windows.Forms.Label lblPlayer2;
-        private System.Windows.Forms.Label lblPlayer3;
-        private System.Windows.Forms.Label lblPlayer4;
-
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null)) components.Dispose();
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
             base.Dispose(disposing);
         }
 
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            lstMyHand = new ListBox();
-            lblTopCard = new Label();
-            lblTurn = new Label();
-            btnPlay = new Button();
-            btnDraw = new Button();
-            btnUno = new Button();
-            lblPlayer1 = new Label();
-            lblPlayer2 = new Label();
-            lblPlayer3 = new Label();
-            lblPlayer4 = new Label();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges23 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges24 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges25 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges26 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges27 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges28 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             guna2Elipse1 = new Guna.UI2.WinForms.Guna2Elipse(components);
+            pn_user1 = new Guna.UI2.WinForms.Guna2Panel();
+            pn_user2 = new Guna.UI2.WinForms.Guna2Panel();
+            pn_user4 = new Guna.UI2.WinForms.Guna2Panel();
+            pn_user3 = new Guna.UI2.WinForms.Guna2Panel();
+            pn_cardplay = new Guna.UI2.WinForms.Guna2Panel();
+            btn_uno = new Guna.UI2.WinForms.Guna2Button();
+            guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
             SuspendLayout();
-            // 
-            // lstMyHand
-            // 
-            lstMyHand.FormattingEnabled = true;
-            lstMyHand.Location = new Point(169, 439);
-            lstMyHand.Name = "lstMyHand";
-            lstMyHand.Size = new Size(600, 164);
-            lstMyHand.TabIndex = 0;
-            // 
-            // lblTopCard
-            // 
-            lblTopCard.AutoSize = true;
-            lblTopCard.Location = new Point(350, 200);
-            lblTopCard.Name = "lblTopCard";
-            lblTopCard.Size = new Size(72, 20);
-            lblTopCard.TabIndex = 8;
-            lblTopCard.Text = "Top Card:";
-            // 
-            // lblTurn
-            // 
-            lblTurn.AutoSize = true;
-            lblTurn.Location = new Point(350, 230);
-            lblTurn.Name = "lblTurn";
-            lblTurn.Size = new Size(41, 20);
-            lblTurn.TabIndex = 7;
-            lblTurn.Text = "Turn:";
-            // 
-            // btnPlay
-            // 
-            btnPlay.Location = new Point(454, 380);
-            btnPlay.Name = "btnPlay";
-            btnPlay.Size = new Size(75, 23);
-            btnPlay.TabIndex = 6;
-            btnPlay.Text = "Play";
-            btnPlay.Click += btnPlay_Click;
-            // 
-            // btnDraw
-            // 
-            btnDraw.Location = new Point(169, 127);
-            btnDraw.Name = "btnDraw";
-            btnDraw.Size = new Size(75, 23);
-            btnDraw.TabIndex = 5;
-            btnDraw.Text = "Draw";
-            btnDraw.Click += btnDraw_Click;
-            // 
-            // btnUno
-            // 
-            btnUno.Location = new Point(796, 478);
-            btnUno.Name = "btnUno";
-            btnUno.Size = new Size(75, 23);
-            btnUno.TabIndex = 4;
-            btnUno.Text = "UNO!";
-            btnUno.Click += btnUno_Click;
-            // 
-            // lblPlayer1
-            // 
-            lblPlayer1.AutoSize = true;
-            lblPlayer1.Location = new Point(93, 465);
-            lblPlayer1.Name = "lblPlayer1";
-            lblPlayer1.Size = new Size(61, 20);
-            lblPlayer1.TabIndex = 3;
-            lblPlayer1.Text = "Player 1";
-            // 
-            // lblPlayer2
-            // 
-            lblPlayer2.AutoSize = true;
-            lblPlayer2.Location = new Point(650, 30);
-            lblPlayer2.Name = "lblPlayer2";
-            lblPlayer2.Size = new Size(61, 20);
-            lblPlayer2.TabIndex = 2;
-            lblPlayer2.Text = "Player 2";
-            // 
-            // lblPlayer3
-            // 
-            lblPlayer3.AutoSize = true;
-            lblPlayer3.Location = new Point(30, 200);
-            lblPlayer3.Name = "lblPlayer3";
-            lblPlayer3.Size = new Size(61, 20);
-            lblPlayer3.TabIndex = 1;
-            lblPlayer3.Text = "Player 3";
-            // 
-            // lblPlayer4
-            // 
-            lblPlayer4.AutoSize = true;
-            lblPlayer4.Location = new Point(650, 200);
-            lblPlayer4.Name = "lblPlayer4";
-            lblPlayer4.Size = new Size(61, 20);
-            lblPlayer4.TabIndex = 0;
-            lblPlayer4.Text = "Player 4";
             // 
             // guna2Elipse1
             // 
             guna2Elipse1.BorderRadius = 10;
             guna2Elipse1.TargetControl = this;
             // 
+            // pn_user1
+            // 
+            pn_user1.BackColor = Color.Transparent;
+            pn_user1.CustomizableEdges = customizableEdges15;
+            pn_user1.Location = new Point(119, 340);
+            pn_user1.Name = "pn_user1";
+            pn_user1.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            pn_user1.Size = new Size(580, 155);
+            pn_user1.TabIndex = 0;
+            pn_user1.Paint += pn_user1_Paint;
+            // 
+            // pn_user2
+            // 
+            pn_user2.BackColor = Color.Transparent;
+            pn_user2.CustomizableEdges = customizableEdges17;
+            pn_user2.Location = new Point(0, 91);
+            pn_user2.Name = "pn_user2";
+            pn_user2.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            pn_user2.Size = new Size(110, 291);
+            pn_user2.TabIndex = 1;
+            // 
+            // pn_user4
+            // 
+            pn_user4.BackColor = Color.Transparent;
+            pn_user4.CustomizableEdges = customizableEdges19;
+            pn_user4.Location = new Point(707, 91);
+            pn_user4.Name = "pn_user4";
+            pn_user4.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            pn_user4.Size = new Size(110, 273);
+            pn_user4.TabIndex = 2;
+            // 
+            // pn_user3
+            // 
+            pn_user3.BackColor = Color.Transparent;
+            pn_user3.CustomizableEdges = customizableEdges21;
+            pn_user3.Location = new Point(120, 0);
+            pn_user3.Name = "pn_user3";
+            pn_user3.ShadowDecoration.CustomizableEdges = customizableEdges22;
+            pn_user3.Size = new Size(580, 103);
+            pn_user3.TabIndex = 1;
+            // 
+            // pn_cardplay
+            // 
+            pn_cardplay.CustomizableEdges = customizableEdges23;
+            pn_cardplay.Location = new Point(294, 150);
+            pn_cardplay.Name = "pn_cardplay";
+            pn_cardplay.ShadowDecoration.CustomizableEdges = customizableEdges24;
+            pn_cardplay.Size = new Size(250, 142);
+            pn_cardplay.TabIndex = 3;
+            // 
+            // btn_uno
+            // 
+            btn_uno.CustomizableEdges = customizableEdges25;
+            btn_uno.DisabledState.BorderColor = Color.DarkGray;
+            btn_uno.DisabledState.CustomBorderColor = Color.DarkGray;
+            btn_uno.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btn_uno.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btn_uno.FillColor = Color.DarkSalmon;
+            btn_uno.Font = new Font("Times New Roman", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btn_uno.ForeColor = Color.White;
+            btn_uno.Location = new Point(707, 386);
+            btn_uno.Name = "btn_uno";
+            btn_uno.ShadowDecoration.CustomizableEdges = customizableEdges26;
+            btn_uno.Size = new Size(102, 82);
+            btn_uno.TabIndex = 4;
+            btn_uno.Text = "UNO";
+            // 
+            // guna2Button1
+            // 
+            guna2Button1.CustomizableEdges = customizableEdges27;
+            guna2Button1.DisabledState.BorderColor = Color.DarkGray;
+            guna2Button1.DisabledState.CustomBorderColor = Color.DarkGray;
+            guna2Button1.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            guna2Button1.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            guna2Button1.FillColor = Color.Red;
+            guna2Button1.Font = new Font("Segoe UI", 9F);
+            guna2Button1.ForeColor = Color.White;
+            guna2Button1.Location = new Point(0, 0);
+            guna2Button1.Name = "guna2Button1";
+            guna2Button1.ShadowDecoration.CustomizableEdges = customizableEdges28;
+            guna2Button1.Size = new Size(110, 64);
+            guna2Button1.TabIndex = 5;
+            guna2Button1.Text = "Menu";
+            // 
             // FormGame
             // 
-            ClientSize = new Size(914, 600);
-            Controls.Add(lblPlayer4);
-            Controls.Add(lblPlayer3);
-            Controls.Add(lblPlayer2);
-            Controls.Add(lblPlayer1);
-            Controls.Add(btnUno);
-            Controls.Add(btnDraw);
-            Controls.Add(btnPlay);
-            Controls.Add(lblTurn);
-            Controls.Add(lblTopCard);
-            Controls.Add(lstMyHand);
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(819, 496);
+            Controls.Add(guna2Button1);
+            Controls.Add(btn_uno);
+            Controls.Add(pn_cardplay);
+            Controls.Add(pn_user3);
+            Controls.Add(pn_user4);
+            Controls.Add(pn_user2);
+            Controls.Add(pn_user1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "FormGame";
-            Text = "UNO Game - 4 Players";
-            Load += FormGame_Load;
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "FormGame";
+            Load += Formgem_Load;
             ResumeLayout(false);
-            PerformLayout();
         }
+
+        #endregion
+
         private Guna.UI2.WinForms.Guna2Elipse guna2Elipse1;
+        private Guna.UI2.WinForms.Guna2ImageButton guna2ImageButton1;
+        private Guna.UI2.WinForms.Guna2Panel pn_cardplay;
+        private Guna.UI2.WinForms.Guna2Panel pn_user4;
+        private Guna.UI2.WinForms.Guna2Panel pn_user3;
+        private Guna.UI2.WinForms.Guna2Panel pn_user2;
+        private Guna.UI2.WinForms.Guna2Panel pn_user1;
+        private Guna.UI2.WinForms.Guna2Button btn_uno;
+        private Guna.UI2.WinForms.Guna2Button guna2Button1;
     }
 }
