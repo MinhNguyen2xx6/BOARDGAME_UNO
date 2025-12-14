@@ -1,0 +1,76 @@
+﻿<Window x:Class="UNO_Client_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Main Menu" Height="450" Width="800" 
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Background>
+        <ImageBrush ImageSource="/Assets/Uno-Car-Party-Banner.jpg" Stretch="UniformToFill" Opacity="1.0"/>
+    </Window.Background>
+
+    <Window.Resources>
+        <Style x:Key="PlayBtnStyle" TargetType="Button">
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" CornerRadius="30" Background="#D32F2F" 
+                                BorderBrush="White" BorderThickness="2">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Opacity="0.5" ShadowDepth="5"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.9" ScaleY="0.9"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="border" Property="Background" Value="#B71C1C"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="RoundedBtn" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="15" Background="{TemplateBinding Background}" BorderBrush="White" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Canvas HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <Button Content="PLAY GAME" Width="243" Height="60" FontSize="22" 
+                    Foreground="White" FontWeight="Bold"
+                    Click="btn_play_Click" 
+                    Style="{StaticResource PlayBtnStyle}" 
+                    Canvas.Left="-122" Canvas.Top="138"/>
+
+            <Button Content="Đăng xuất" Width="84" Height="27" 
+                    Background="#444" Foreground="White"
+                    Click="btn_logout_Click" 
+                    Style="{StaticResource RoundedBtn}" 
+                    Canvas.Left="-387" Canvas.Top="-205"/>
+
+        </Canvas>
+    </Grid>
+</Window>
