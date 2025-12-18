@@ -186,17 +186,55 @@ namespace UnoServer
             _listener.Start();
             Console.WriteLine("UNO Room Server started.");
 
-            while (_clients.Count < 4)
+            while (true)
             {
                 var client = await _listener.AcceptTcpClientAsync();
                 lock (_clients) { _clients.Add(client); }
                 _ = HandleClientAsync(client);
                 Console.WriteLine("Client connected.");
             }
-
-            _room.StartGame();
-            BroadcastState();
         }
+        private void SendStartGame()
+        {
+            Console.WriteLine("📢 Phát bài cho người chơi...");
+
+            for (int i = 0; i < _room.Players.Count; i++)
+            {
+                var player = _room.Players[i];
+                var client = _clients[i];
+
+                var startMsg = new
+                {
+                    type = "start",
+                    yourName = player.Name,
+                    yourIndex = i,
+                    topCard = new
+                    {
+                        color = _room.TopCard.Color.ToString(),
+                        value = _room.TopCard.Value.ToString()
+                    },
+                    yourHand = player.Hand.Select(c => new
+                    {
+                        color = c.Color.ToString(),
+                        value = c.Value.ToString()
+                    })
+                };
+
+                string json = JsonConvert.SerializeObject(startMsg);
+                byte[] data = Encoding.UTF8.GetBytes(json);
+
+                try
+                {
+                    client.GetStream().Write(data, 0, data.Length);
+                    Console.WriteLine($"✔ Phát {player.Hand.Count} lá cho {player.Name}");
+                }
+                catch
+                {
+                    Console.WriteLine($"❌ Không gửi được bài cho {player.Name}");
+                }
+            }
+        }
+
 
         private async Task HandleClientAsync(TcpClient client)
         {
@@ -215,10 +253,27 @@ namespace UnoServer
                 switch (type)
                 {
                     case "join":
+
                         string name = msg.player;
-                        if (_room.Players.Count < 4 && !_room.Players.Any(p => p.Name == name))
+
+                        if (!_room.Players.Any(p => p.Name == name))
+                        {
                             _room.Players.Add(new Player(name));
+                            Console.WriteLine($"Player joined: {name} ({_room.Players.Count}/2)");
+                        }
+
+                        if (_room.Players.Count >= 4 && _room.State == RoomState.Waiting)
+                        {
+                            Console.WriteLine("=================================");
+                            Console.WriteLine("ĐỦ 4 NGƯỜI – GAME BẮT ĐẦU!");
+                            Console.WriteLine("=================================");
+
+                            _room.StartGame();
+                            SendStartGame();   // 🔥 PHÁT BÀI cho 4 người
+                        }
+
                         break;
+
 
                     case "play":
                         HandlePlay((string)msg.player,
