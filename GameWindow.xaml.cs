@@ -1,111 +1,317 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
+using System.Windows.Media; 
+using System.Windows.Media.Animation;
 
 namespace UNO_Client_WPF
 {
     public partial class GameWindow : Window
     {
-        private string? _roomName;
-        private List<string>? _players;
+        private readonly string _roomName;
+        private readonly string _playerName;
+        private readonly NetworkClient _client;
 
-        // Biến lưu lá bài đang được chọn
-        private Button? _selectedCard = null;
+        private ToggleButton? _selectedCard = null;
 
-        public GameWindow(string? roomName, List<string>? players)
+        private readonly Dictionary<string, BitmapImage> _imageCache = new();
+
+        
+        private bool _isAnimatingPlay = false;  //(VQ) Biến cờ để ngăn Server cập nhật bài khi đang chạy hiệu ứng đánh bài
+
+        public GameWindow(string roomName, string playerName)
         {
             InitializeComponent();
             _roomName = roomName;
-            _players = players;
+            _playerName = playerName;
 
-            // Test phát bài
-            AddCardToHand("Blue_1");
-            AddCardToHand("Red_Skip");
-            AddCardToHand("Green_7");
-            AddCardToHand("Yellow_Reverse");
+            _client = new NetworkClient();
+            _client.OnStateUpdate += HandleStateUpdate; //(TP) nơi khởi tạo các biến cần thiết và bắt đầu kết nối tới server
+            _client.OnStart += HandleStart;
+
+            ConnectToServer();
         }
 
-        // --- 1. THÊM BÀI VÀO TAY ---
-        private void AddCardToHand(string cardName)
+        private async void ConnectToServer()
         {
-            Button btnCard = new Button();
-            var style = TryFindResource("CardStyle") as Style;
-            if (style != null) btnCard.Style = style;
-
-            btnCard.Tag = cardName; // Lưu tên bài
-            btnCard.RenderTransform = new TranslateTransform(0, 0); // Khởi tạo Transform
-
-            Image img = new Image();
             try
             {
-                img.Source = new BitmapImage(new Uri($"/Assets/{cardName}.png", UriKind.Relative));
+                await _client.ConnectAsync("127.0.0.1", 5000, _playerName);
+                MessageBox.Show("Đã kết nối tới server!");
+            }
+            catch (Exception ex)                         // (TP) hàm kết nối
+            {
+                MessageBox.Show("Không thể kết nối: " + ex.Message);
+            }
+        }
+
+        // Map enum -> filename
+        private string MapCardToAsset(string color, string value)
+        {
+            // (VQ) Xử lý các lá Wild
+            if (value.Contains("WildDrawFour")) return "WildDrawFour.png";
+            if (value.Contains("Wild")) return "Wild.png";
+
+            var digits = new Dictionary<string, string>
+            {
+                { "Zero", "0" }, { "One", "1" }, { "Two", "2" }, { "Three", "3" },
+                { "Four", "4" }, { "Five", "5" }, { "Six", "6" }, { "Seven", "7" },  //(TP) tại vì server gửi các tín hiệu lá bài tên khác với lưu trong file nên phải chuyển đổi về
+                { "Eight", "8" }, { "Nine", "9" }
+            };
+
+            if (digits.TryGetValue(value, out var d))
+                return $"{color}_{d}.png";
+
+            if (value == "DrawTwo") return $"{color}_Draw.png"; // sửa theo tên file thật của bạn
+            if (value == "Skip") return $"{color}_Skip.png";
+            if (value == "Reverse") return $"{color}_Reverse.png";
+
+            return $"{color}_{value}.png";
+        }
+
+        private BitmapImage LoadAssetImage(string fileName)
+        {
+            if (_imageCache.TryGetValue(fileName, out var cached)) return cached;
+            try
+            {
+                var uri = new Uri($"pack://application:,,,/Assets/{fileName}", UriKind.Absolute);
+                var bmp = new BitmapImage(uri);
+                _imageCache[fileName] = bmp;
+                return bmp;
             }
             catch
             {
-                img.Source = new BitmapImage(new Uri("/Assets/uno_classic_logo.jpg", UriKind.Relative));
+                var fallback = new BitmapImage(new Uri("pack://application:,,,/Assets/uno-classic-logo.jpg", UriKind.Absolute));     // (TP) hàm này là để load ảnh 1 cách an toàn
+                _imageCache[fileName] = fallback;
+                return fallback;
             }
-            img.Stretch = Stretch.Uniform;
+        }
+       
+        private async void HandleStart(dynamic msg)
+        {
+            // (VQ) Sử dụng async/await
+            await Dispatcher.InvokeAsync(() =>
+            {
+                string topColor = (string)msg.topCard.color;
+                string topValue = (string)msg.topCard.value;
+                imgCurrentCard.Source = LoadAssetImage(MapCardToAsset(topColor, topValue)); //(TP) Hàm này dùng để xử lý lần phát bài ban đầu và hiện lá bài ở giauwx sân
+                
+                HandPanel.Children.Clear();
+            });
+
+            foreach (var c in msg.yourHand)
+            {
+                string color = (string)c.color;
+                string value = (string)c.value;
+                BitmapImage img = LoadAssetImage(MapCardToAsset(color, value));  // (VQ) Chuẩn bị sẵn ảnh
+
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    // (VQ) Chạy hiệu ứng bay quân bài
+                    AnimateCard(btnDrawPile, HandPanel, img, () =>
+                    {
+                        // (VQ) Sau khi xong hiệu ứng add vào tay
+                        AddCardToHand(color, value);
+                        CheckUnoStatus();
+                    });
+                });
+                await Task.Delay(500); // (VQ) Có độ trễ giữa các lần chia bài
+            }
+        }
+
+        private void HandleStateUpdate(dynamic msg)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                // Lá trên bàn
+                string topColor = (string)msg.topCard.color;
+                string topValue = (string)msg.topCard.value;
+                imgCurrentCard.Source = LoadAssetImage(MapCardToAsset(topColor, topValue));
+
+                // Danh sách players
+                var players = (IEnumerable<dynamic>)msg.players;
+
+                // Chính mình
+                var me = players.FirstOrDefault(p => p.name == _playerName);    // (TP) Hàm này là để liên tục update khi nhận được tín hiệu của server
+
+                if (me != null && !_isAnimatingPlay)
+                {
+                    // (VQ) Kiểm tra số lượng bài sever gửi về so với đang hiện trên màn hình
+                    var serverHand = (IEnumerable<dynamic>)me.hand;
+                    int serverCount = serverHand.Count();
+                    int currentUICount = HandPanel.Children.Count;
+
+                    if (serverCount > currentUICount) // (VQ) Trường hợp rút bài
+                    {
+                        // (VQ) Lấy thông tin lá bài mới nhất 
+                        var newCardData = serverHand.Last();
+                        string color = (string)newCardData.color;
+                        string value = (string)newCardData.value;
+                        BitmapImage img = LoadAssetImage(MapCardToAsset(color, value));
+
+                        _isAnimatingPlay = true; // (VQ) Khóa để không bị cập nhật chồng chéo
+
+                        // (VQ) Chạy animation
+                        AnimateCard(btnDrawPile, HandPanel, img, () =>
+                        {
+                            // (VQ) Sau khi xong hiệu ứng mới đồng bộ
+                            HandPanel.Children.Clear();
+                            foreach (var c in serverHand)
+                            {
+                                AddCardToHand((string)c.color, (string)c.value);
+                            }
+                            _isAnimatingPlay = false;
+                            CheckUnoStatus();
+                        });
+                    }
+                    else if (serverCount < currentUICount) //(VQ) Trường hợp đánh bài hoặc mất bài
+                    {
+                        HandPanel.Children.Clear();
+                        foreach (var c in serverHand)
+                        {
+                            AddCardToHand((string)c.color, (string)c.value);
+                        }
+                    }
+                }
+
+                // (VQ) Các đối thủ (Dùng UpdateOpponent)
+                var others = players.Where(p => p.name != _playerName).ToList();
+                if (others.Count >= 1) UpdateOpponentHand(BotTopHand, txtBotTopName, others[0]);
+                if (others.Count >= 2) UpdateOpponentHand(BotLeftHand, txtBotLeftName, others[1]);
+                if (others.Count >= 3) UpdateOpponentHand(BotRightHand, txtBotRightName, others[2]);
+
+                // Hiển thị lượt hiện tại
+                int currentIndex = (int)msg.currentIndex;
+                var currentPlayer = players.ElementAt(currentIndex);
+                txtTurnInfo.Text = $"Lượt: {(currentPlayer.name == _playerName ? "BẠN" : currentPlayer.name)}";
+                // Kiểm tra trạng thái UNO
+                CheckUnoStatus();
+            }));
+        }
+
+        // (VQ) Hàm UpdateOpponentHand
+        private void UpdateOpponentHand(Panel panel, TextBlock nameLabel, dynamic playerData)
+        {
+            nameLabel.Text = playerData.name;
+            panel.Children.Clear();
+            int count = ((IEnumerable<dynamic>)playerData.hand).Count();
+            for (int i = 0; i < count; i++)
+            {
+                var img = new Image
+                {
+                    Width = 40,
+                    Height = 60,
+                    Source = LoadAssetImage("Deck.png"),
+                    Margin = new Thickness(2, 0, 2, 0) // (VQ) Hiệu ứng xếp chồng
+                };
+                panel.Children.Add(img);
+            }
+        }
+       
+
+       
+        private void AddCardToHand(string color, string value)
+        {
+            string fileName = MapCardToAsset(color, value);
+
+            var btnCard = new ToggleButton
+            {
+                Tag = $"{color}_{value}",
+                Width = 110,
+                Height = 160,
+                Margin = new Thickness(5, 0, 0, 0),
+                Style = TryFindResource("CardStyle") as Style
+            };
+
+            var img = new System.Windows.Controls.Image
+            {
+                Width = 110,
+                Height = 160,
+                Stretch = System.Windows.Media.Stretch.UniformToFill,     //(TP) Hàm thêm bài lên tay bằng cách tạo các button rồi thêm ảnh vào
+                Source = LoadAssetImage(fileName)
+            };
+
             btnCard.Content = img;
 
-            // KHI CLICK VÀO LÁ BÀI -> CHỈ CHỌN (SELECT), KHÔNG ĐÁNH NGAY
-            btnCard.Click += (s, e) => SelectCard(s as Button);
+            btnCard.Checked += (s, e) =>
+            {
+                if (_selectedCard is ToggleButton old && !ReferenceEquals(old, btnCard))
+                    old.IsChecked = false;
+                _selectedCard = btnCard;
+            };
+            btnCard.Unchecked += (s, e) =>
+            {
+                if (ReferenceEquals(_selectedCard, btnCard))
+                    _selectedCard = null;
+            };
 
             HandPanel.Children.Add(btnCard);
-            CheckUnoStatus();
         }
 
-        // --- 2. LOGIC CHỌN BÀI (SELECT) ---
-        private void SelectCard(Button? clickedBtn)
+        private void AnimateCard(FrameworkElement sourceUI, FrameworkElement targetUI, BitmapImage cardImg, Action onComplete)
         {
-            if (clickedBtn == null) return;
+            this.UpdateLayout();
 
-            // A. Reset lá bài cũ (nếu có) xuống vị trí bình thường
-            if (_selectedCard != null)
+            // (VQ) Tính vị trí bắt đầu và kết thúc
+            Point startPos = sourceUI.TranslatePoint(new Point(0, 0), this);
+            Point endPos = targetUI.TranslatePoint(new Point(0, 0), this);
+
+            if (targetUI == HandPanel)
             {
-                var transform = _selectedCard.RenderTransform as TranslateTransform;
-                if (transform != null) transform.Y = 0;
-
-                // Trả lại viền trắng mặc định
-                if (_selectedCard.Template.FindName("border", _selectedCard) is Border oldBorder)
-                {
-                    oldBorder.BorderBrush = Brushes.White;
-                }
+                endPos.X += (targetUI.ActualWidth > 100 ? targetUI.ActualWidth - 100 : 0);
             }
 
-            // B. Nếu click lại lá đang chọn -> Hủy chọn (Bỏ comment nếu muốn tính năng này)
-            /*
-            if (_selectedCard == clickedBtn) {
-                _selectedCard = null;
-                return;
-            }
-            */
-
-            // C. Nổi lá bài mới lên
-            _selectedCard = clickedBtn;
-
-            // Dịch chuyển lên cao (-50px)
-            var newTransform = _selectedCard.RenderTransform as TranslateTransform;
-            if (newTransform == null)
+            // (VQ) Tạo lá bài ảo để làm animation, ko đụng vào bài thật
+            Image animatedCard = new Image
             {
-                newTransform = new TranslateTransform();
-                _selectedCard.RenderTransform = newTransform;
-            }
-            newTransform.Y = -50;
+                Source = cardImg,
+                Height = 150,
+                RenderTransformOrigin = new Point(0.5, 0.5),
+                IsHitTestVisible = false
+            };
 
-            // Đổi màu viền sang xanh lá để biết đang chọn
-            if (_selectedCard.Template.FindName("border", _selectedCard) is Border newBorder)
+            Canvas.SetLeft(animatedCard, startPos.X);
+            Canvas.SetTop(animatedCard, startPos.Y);
+            AnimationLayer.Children.Add(animatedCard);
+
+            Duration duration = new Duration(TimeSpan.FromMilliseconds(700)); // (VQ) Tốc độ bay khi rút bài
+            DoubleAnimation animX = new DoubleAnimation(endPos.X, duration) { EasingFunction = new PowerEase { Power = 2 } };
+            DoubleAnimation animY = new DoubleAnimation(endPos.Y, duration) { EasingFunction = new PowerEase { Power = 2 } };
+
+            // (VQ) Bài xoay 360 độ khi bay về tay
+            DoubleAnimation animRotate = new DoubleAnimation(0, 360, duration);
+
+            animatedCard.RenderTransform = new RotateTransform();
+            
+            // (VQ) Làm các animation hoạt động cùng 1 lúc
+            Storyboard sb = new Storyboard();
+
+            Storyboard.SetTarget(animX, animatedCard);
+            Storyboard.SetTargetProperty(animX, new PropertyPath(Canvas.LeftProperty));
+            Storyboard.SetTarget(animY, animatedCard);
+            Storyboard.SetTargetProperty(animY, new PropertyPath(Canvas.TopProperty));
+            Storyboard.SetTarget(animRotate, animatedCard);
+            Storyboard.SetTargetProperty(animRotate, new PropertyPath("(UIElement.RenderTransform).(RotateTransform.Angle)"));
+
+            sb.Children.Add(animX);
+            sb.Children.Add(animY);
+            sb.Children.Add(animRotate);
+
+            sb.Completed += (s, e) =>
             {
-                newBorder.BorderBrush = Brushes.LimeGreen;
-            }
+                AnimationLayer.Children.Remove(animatedCard); // (VQ) Xóa lá bài ảo
+                onComplete?.Invoke(); // (VQ) Gọi hành động thêm bài thật vào tay
+            };
+            sb.Begin();
         }
 
-        // --- 3. LOGIC NÚT ĐÁNH BÀI (PLAY BUTTON) ---
-        private async void btnPlayCard_Click(object sender, RoutedEventArgs e)
+        private void btnPlayCard_Click(object sender, RoutedEventArgs e)
         {
             if (_selectedCard == null)
             {
@@ -113,159 +319,64 @@ namespace UNO_Client_WPF
                 return;
             }
 
-            // Khóa nút để tránh spam
-            btnPlayCard.IsEnabled = false;
-
-            // Gọi hàm Animation bài bay
-            await AnimateCardToTable(_selectedCard);
-
-            // Xử lý sau khi đánh xong
-            HandPanel.Children.Remove(_selectedCard);
-            _selectedCard = null;
-            btnSkip.Visibility = Visibility.Collapsed;
-
-            CheckUnoStatus();
-            btnPlayCard.IsEnabled = true;
-        }
-
-        // --- 4. ANIMATION BÀI BAY TỪ TAY RA BÀN ---
-        private async Task AnimateCardToTable(Button cardBtn)
-        {
-            // A. Tạo ảnh giả để bay
-            Image flyingCard = new Image();
-            if (cardBtn.Content is Image srcImg)
-                flyingCard.Source = srcImg.Source;
-
-            flyingCard.Width = 110;
-            flyingCard.Height = 160;
-
-            // B. Lấy tọa độ hiện tại của lá bài trên tay (Start)
-            Point startPoint = cardBtn.TranslatePoint(new Point(0, 0), this);
-
-            // C. Lấy tọa độ bàn chơi (End) - Vị trí imgCurrentCard
-            Point endPoint = imgCurrentCard.TranslatePoint(new Point(0, 0), this);
-
-            // D. Đặt ảnh giả vào Canvas
-            Canvas.SetLeft(flyingCard, startPoint.X);
-            Canvas.SetTop(flyingCard, startPoint.Y);
-            AnimationLayer.Children.Add(flyingCard);
-
-            // Ẩn lá bài thật trên tay đi (để cảm giác nó đã bay đi)
-            cardBtn.Visibility = Visibility.Hidden;
-
-            // E. Animation Bay
-            DoubleAnimation animX = new DoubleAnimation(startPoint.X, endPoint.X, TimeSpan.FromSeconds(0.4));
-            DoubleAnimation animY = new DoubleAnimation(startPoint.Y, endPoint.Y, TimeSpan.FromSeconds(0.4));
-
-            // Hiệu ứng bay nhanh dần
-            QuadraticEase ease = new QuadraticEase { EasingMode = EasingMode.EaseIn };
-            animX.EasingFunction = ease;
-            animY.EasingFunction = ease;
-
-            flyingCard.BeginAnimation(Canvas.LeftProperty, animX);
-            flyingCard.BeginAnimation(Canvas.TopProperty, animY);
-
-            // F. Đợi bay xong
-            await Task.Delay(400);
-
-            // G. Cập nhật bài trên bàn và xóa ảnh giả
-            imgCurrentCard.Source = flyingCard.Source;
-            AnimationLayer.Children.Remove(flyingCard);
-        }
-
-        // --- 5. LOGIC RÚT BÀI ---
-        private async void btnDrawPile_Click(object sender, RoutedEventArgs e)
-        {
-            btnDrawPile.IsEnabled = false;
-
-            Image flyingCard = new Image();
-            try { flyingCard.Source = new BitmapImage(new Uri("/Assets/Deck.png", UriKind.Relative)); } catch { }
-            flyingCard.Width = 100; flyingCard.Height = 150;
-            flyingCard.RenderTransformOrigin = new Point(0.5, 0.5);
-
-            TransformGroup group = new TransformGroup();
-            group.Children.Add(new ScaleTransform());
-            group.Children.Add(new TranslateTransform());
-            flyingCard.RenderTransform = group;
-
-            Point startPoint = btnDrawPile.TranslatePoint(new Point(0, 0), this);
-            Point endPoint = HandPanel.TranslatePoint(new Point(HandPanel.ActualWidth / 2, 0), this);
-
-            Canvas.SetLeft(flyingCard, startPoint.X);
-            Canvas.SetTop(flyingCard, startPoint.Y);
-            AnimationLayer.Children.Add(flyingCard);
-
-            // ANIMATION LẬT BÀI
-            Storyboard sb = new Storyboard();
-
-            // 1. Co lại (0 -> 0.2s)
-            DoubleAnimation flip1 = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.2));
-            Storyboard.SetTarget(flip1, flyingCard);
-            Storyboard.SetTargetProperty(flip1, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"));
-            sb.Children.Add(flip1);
-
-            // 2. Đổi ảnh (tại 0.2s)
-            ObjectAnimationUsingKeyFrames changeImg = new ObjectAnimationUsingKeyFrames();
-            changeImg.BeginTime = TimeSpan.FromSeconds(0.2);
-            string drawnCard = "Wild"; // Random bài ở đây
-            changeImg.KeyFrames.Add(new DiscreteObjectKeyFrame(new BitmapImage(new Uri($"/Assets/{drawnCard}.png", UriKind.Relative))));
-            Storyboard.SetTarget(changeImg, flyingCard);
-            Storyboard.SetTargetProperty(changeImg, new PropertyPath(Image.SourceProperty));
-            sb.Children.Add(changeImg);
-
-            // 3. Phình ra (0.2s -> 0.4s)
-            DoubleAnimation flip2 = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.2));
-            flip2.BeginTime = TimeSpan.FromSeconds(0.2);
-            Storyboard.SetTarget(flip2, flyingCard);
-            Storyboard.SetTargetProperty(flip2, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"));
-            sb.Children.Add(flip2);
-
-            // 4. Bay về tay (0.4s -> 0.8s)
-            DoubleAnimation moveX = new DoubleAnimation(0, endPoint.X - startPoint.X, TimeSpan.FromSeconds(0.4));
-            moveX.BeginTime = TimeSpan.FromSeconds(0.4);
-            Storyboard.SetTarget(moveX, flyingCard);
-            Storyboard.SetTargetProperty(moveX, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.X)"));
-            sb.Children.Add(moveX);
-
-            DoubleAnimation moveY = new DoubleAnimation(0, endPoint.Y - startPoint.Y + 100, TimeSpan.FromSeconds(0.4));
-            moveY.BeginTime = TimeSpan.FromSeconds(0.4);
-            Storyboard.SetTarget(moveY, flyingCard);
-            Storyboard.SetTargetProperty(moveY, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)"));
-            sb.Children.Add(moveY);
-
-            sb.Completed += (s, ev) =>
+            var parts = _selectedCard.Tag.ToString().Split('_');
+            
+            if (parts.Length < 2)
             {
-                AnimationLayer.Children.Remove(flyingCard);
-                AddCardToHand(drawnCard);
-                btnSkip.Visibility = Visibility.Visible;
-                btnDrawPile.IsEnabled = true;
-            };
+                MessageBox.Show("Thẻ bài không hợp lệ.");
+                return;
+            }
 
-            sb.Begin();
+            string color = parts[0];
+            string value = parts[1];
+
+            _isAnimatingPlay = true; // (VQ) Khóa cập nhật từ server
+
+            // (VQ) Thực hiện Animation
+            var imgControl = _selectedCard.Content as Image;
+            BitmapImage imgSource = (BitmapImage)imgControl.Source;
+
+            var cardToAnimate = _selectedCard; // (VQ) Lưu biến tạm
+
+            cardToAnimate.Opacity = 0;
+            cardToAnimate.IsHitTestVisible = false; //(VQ) Ngăn người dùng click vào khoảng trống
+
+            AnimateCard(cardToAnimate, imgCurrentCard, imgSource, () =>
+            {
+                HandPanel.Children.Remove(cardToAnimate);
+                imgCurrentCard.Source = imgSource;
+                _selectedCard = null;
+                _isAnimatingPlay = false;
+
+
+                _client.Send(new
+                {
+                    type = "play",
+                    player = _playerName,
+                    card = new { color, value }
+                });
+            });
         }
 
-        private void btnSkip_Click(object sender, RoutedEventArgs e)
+        private void btnDrawPile_Click(object sender, RoutedEventArgs e)
         {
-            btnSkip.Visibility = Visibility.Collapsed;
-            MessageBox.Show("Bỏ lượt");
+            _client.Send(new { type = "draw", player = _playerName });
         }
 
         private void btnUno_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("UNO!");
-            btnUno.Visibility = Visibility.Collapsed;
+            _client.Send(new { type = "uno", player = _playerName });
         }
 
         private void CheckUnoStatus()
         {
-            if (HandPanel.Children.Count == 1) btnUno.Visibility = Visibility.Visible;
-            else btnUno.Visibility = Visibility.Collapsed;
+            btnUno.Visibility = HandPanel.Children.Count == 1 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void btn_quit_Click(object sender, RoutedEventArgs e)
         {
-            new MainWindow().Show();
-            this.Close();
+            Close();
         }
+       
     }
 }

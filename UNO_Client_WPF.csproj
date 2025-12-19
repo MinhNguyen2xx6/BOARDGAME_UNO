@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\46f48e80a6b222f1b1aec87757bc11.png" />
     <None Remove="Assets\Background-hcn.jpg" />
     <None Remove="Assets\Background.jpg" />
     <None Remove="Assets\Blue_0.png" />
@@ -63,6 +62,7 @@
     <None Remove="Assets\uno-classic-logo.jpg" />
     <None Remove="Assets\UNO_MainMenu.jpg" />
     <None Remove="Assets\Wild.png" />
+    <None Remove="Assets\WildDrawFour.png" />
     <None Remove="Assets\Wild_Draw.png" />
     <None Remove="Assets\Yellow_0.png" />
     <None Remove="Assets\Yellow_1.png" />
@@ -84,7 +84,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\46f48e80a6b222f1b1aec87757bc11.png" />
     <Resource Include="Assets\Background-hcn.jpg" />
     <Resource Include="Assets\Background.jpg" />
     <Resource Include="Assets\Blue_0.png" />
@@ -138,7 +137,7 @@
     <Resource Include="Assets\uno-classic-logo.jpg" />
     <Resource Include="Assets\UNO_MainMenu.jpg" />
     <Resource Include="Assets\Wild.png" />
-    <Resource Include="Assets\Wild_Draw.png" />
+    <Resource Include="Assets\WildDrawFour.png" />
     <Resource Include="Assets\Yellow_0.png" />
     <Resource Include="Assets\Yellow_1.png" />
     <Resource Include="Assets\Yellow_2.png" />

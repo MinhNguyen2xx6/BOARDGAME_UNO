@@ -81,10 +81,12 @@ namespace UNO_Client_WPF
         private void OpenGame(string roomName, List<string> players)
         {
             timer.Stop();
-            GameWindow game = new GameWindow(roomName, players);
+            // chỉ truyền tên của người chơi hiện tại
+            GameWindow game = new GameWindow(roomName, Session.UserEmail);
             game.Show();
             this.Close();
         }
+
 
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {
