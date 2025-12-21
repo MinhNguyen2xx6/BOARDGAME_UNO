@@ -32,6 +32,19 @@ namespace UNO_Client_WPF
 
         private bool _isAnimatingPlay = false;  //(VQ) Biến cờ để ngăn Server cập nhật bài khi đang chạy hiệu ứng đánh bài
 
+
+        // Thêm biến class level
+        private bool _isMyTurn = false;
+
+        // Biến lưu thông tin lá bài trên bàn để kiểm tra luật (QUAN TRỌNG)
+        private string _currentTopColor;
+        private string _currentTopValue;
+
+        // Biến lưu tạm lá Wild khi đang chọn màu
+        private string _pendingWildValue = "";
+
+ 
+
         public GameWindow(string roomName, string playerName)
         {
             InitializeComponent();
@@ -134,12 +147,44 @@ namespace UNO_Client_WPF
 
         private void HandleStateUpdate(dynamic msg)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            Dispatcher.BeginInvoke(new Action(async  () =>
             {
+
+                // [PHẦN MỚI] 1. KIỂM TRA CHIẾN THẮNG
+                // =================================================================
+                // Giả sử Server gửi về trường "winner" chứa tên người thắng (nếu chưa ai thắng thì null hoặc rỗng)
+                try
+                {
+                    string winner = (string)msg.winner;
+                    if (!string.IsNullOrEmpty(winner))
+                    {
+                        // Hiện thông báo
+                        if (winner == _playerName)
+                        {
+                            MessageBox.Show("CHÚC MỪNG! BẠN ĐÃ CHIẾN THẮNG!", "Victory", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"TRÒ CHƠI KẾT THÚC!\nNgười thắng: {winner}", "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+
+                        // Quay về Lobby
+                        await ReturnToLobby();
+                        return; // Dừng hàm, không xử lý update bài nữa
+                    }
+                }
+                catch { /* Bỏ qua nếu JSON không có trường winner (đề phòng lỗi) */ }
+
+
                 // Lá trên bàn
                 string topColor = (string)msg.topCard.color;
                 string topValue = (string)msg.topCard.value;
                 imgCurrentCard.Source = LoadAssetImage(MapCardToAsset(topColor, topValue));
+
+
+                _currentTopColor = topColor;
+                _currentTopValue = topValue;
+
 
                 // Danh sách players
                 var players = (IEnumerable<dynamic>)msg.players;
@@ -230,9 +275,18 @@ namespace UNO_Client_WPF
                 panel.Children.Add(border);
             }
         }
-       
 
-       
+        private void btnDrawPile_Click(object sender, RoutedEventArgs e)
+        {
+            // [Logic Mới]: Chỉ được rút bài nếu ĐÚNG LƯỢT
+            if (!_isMyTurn)
+            {
+                MessageBox.Show("Chưa đến lượt của bạn!");
+                return;
+            }
+            _client.Send(new { type = "draw", player = _playerName });
+        }
+
         private void AddCardToHand(string color, string value)
         {
             string fileName = MapCardToAsset(color, value);
@@ -336,56 +390,119 @@ namespace UNO_Client_WPF
 
         private void btnPlayCard_Click(object sender, RoutedEventArgs e)
         {
+            // [Logic Mới]: Kiểm tra xem có phải lượt của mình không (_isMyTurn được cập nhật từ Server)
+            if (!_isMyTurn)
+            {
+                MessageBox.Show("Chưa đến lượt của bạn!");
+                return;
+            }
+
+            // Kiểm tra người chơi đã chọn lá bài nào chưa
             if (_selectedCard == null)
             {
                 MessageBox.Show("Vui lòng chọn một lá bài trước!");
                 return;
             }
 
+            // Lấy thông tin lá bài từ Tag (Ví dụ: "Red_Five" -> parts[0]="Red", parts[1]="Five")
             var parts = _selectedCard.Tag.ToString().Split('_');
-            
-            if (parts.Length < 2)
-            {
-                MessageBox.Show("Thẻ bài không hợp lệ.");
-                return;
-            }
+            if (parts.Length < 2) return;
 
             string color = parts[0];
             string value = parts[1];
 
-            _isAnimatingPlay = true; // (VQ) Khóa cập nhật từ server
+            // [Logic Mới]: Kiểm tra luật UNO tại Client trước khi gửi Server
+            // Nếu không hợp lệ (khác màu, khác số) thì báo lỗi ngay.
+            if (!IsValidMove(color, value))
+            {
+                MessageBox.Show("Bài không hợp lệ! Phải cùng màu hoặc cùng số (hoặc dùng thẻ Wild).");
+                return;
+            }
 
-            // (VQ) Thực hiện Animation
+            // [Logic Mới]: XỬ LÝ WILD CARD (Đổi màu hoặc +4)
+            if (value.Contains("Wild"))
+            {
+                _pendingWildValue = value; // Lưu tạm giá trị lá bài (ví dụ "WildDrawFour")
+                ColorSelectionGrid.Visibility = Visibility.Visible; // Hiện cái bảng 4 màu lên
+                return; // QUAN TRỌNG: Dừng hàm tại đây, KHÔNG gửi lệnh lên server vội
+            }
+
+            // Nếu là bài thường (không phải Wild), thực hiện đánh ngay
+            ExecutePlayCard(color, value);
+        }
+
+        //  Kiểm tra lá bài có hợp lệ để đánh không
+        private bool IsValidMove(string cardColor, string cardValue)
+        {
+            // Nếu chưa có thông tin bài trên bàn (lần đầu vào), cho phép đánh để tránh lỗi kẹt
+            if (string.IsNullOrEmpty(_currentTopColor)) return true;
+
+            // Luật 1: Lá Wild hoặc Wild Draw 4 luôn đánh được bất kể màu gì
+            if (cardValue.Contains("Wild")) return true;
+
+            // Luật 2: Cùng màu với lá trên bàn
+            if (cardColor == _currentTopColor) return true;
+
+            // Luật 3: Cùng số hoặc cùng chức năng (ví dụ Skip đè lên Skip) với lá trên bàn
+            if (cardValue == _currentTopValue) return true;
+
+            // Không thỏa mãn luật nào -> Không được đánh
+            return false;
+        }
+
+
+
+        private void ColorSelect_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            string selectedColor = btn.Tag.ToString(); // Lấy màu từ Tag (Red/Blue/...)
+
+            // Ẩn bảng chọn màu
+            ColorSelectionGrid.Visibility = Visibility.Collapsed;
+
+            // Đánh lá Wild với màu vừa chọn
+            ExecutePlayCard(selectedColor, _pendingWildValue);
+
+            // Reset biến tạm
+            _pendingWildValue = "";
+        }
+
+      
+        private void ExecutePlayCard(string color, string value)
+        {
+            _isAnimatingPlay = true; // Bật cờ này để chặn server update đè lên tay bài khi đang bay
+
+            // Lấy ảnh từ nút bài đang chọn để làm hiệu ứng
             var imgControl = _selectedCard.Content as Image;
             BitmapImage imgSource = (BitmapImage)imgControl.Source;
+            var cardToAnimate = _selectedCard;
 
-            var cardToAnimate = _selectedCard; // (VQ) Lưu biến tạm
-
+            // Làm mờ/ẩn lá bài trên tay ngay lập tức để người chơi không bấm nhầm lần 2
             cardToAnimate.Opacity = 0;
-            cardToAnimate.IsHitTestVisible = false; //(VQ) Ngăn người dùng click vào khoảng trống
+            cardToAnimate.IsHitTestVisible = false;
 
+            // Gọi hàm hiệu ứng bay bài
             AnimateCard(cardToAnimate, imgCurrentCard, imgSource, () =>
             {
-                HandPanel.Children.Remove(cardToAnimate);
-                imgCurrentCard.Source = imgSource;
-                _selectedCard = null;
-                _isAnimatingPlay = false;
+                // Khi bay xong:
+                HandPanel.Children.Remove(cardToAnimate); // Xóa bài khỏi tay trên UI
+                imgCurrentCard.Source = imgSource;        // Cập nhật bài giữa bàn
+                _selectedCard = null;                     // Bỏ chọn
+                _isAnimatingPlay = false;                 // Tắt cờ chặn update
 
-
+                // Gửi lệnh JSON lên Server
+                // Lưu ý: Với thẻ Wild, 'color' ở đây là màu người chơi MUỐN đổi sang
                 _client.Send(new
                 {
                     type = "play",
                     player = _playerName,
-                    card = new { color, value }
+                    card = new { color = color, value = value }
                 });
+
+                // Kiểm tra xem còn 1 lá không để hiện nút UNO
+                CheckUnoStatus();
             });
         }
-
-        private void btnDrawPile_Click(object sender, RoutedEventArgs e)
-        {
-            _client.Send(new { type = "draw", player = _playerName });
-        }
-
         private void btnUno_Click(object sender, RoutedEventArgs e)
         {
             _client.Send(new { type = "uno", player = _playerName });
@@ -398,11 +515,8 @@ namespace UNO_Client_WPF
 
         private async void btn_quit_Click(object sender, RoutedEventArgs e)
         {
-            btn_quit.IsEnabled = false;
-            await LeaveRoomAsync();//Out phong
-            LobbyWindow lobby = new LobbyWindow();
-            lobby.Show();//Quay ve Lobby
-            this.Close();
+            btn_quit.IsEnabled = false; // Chặn bấm liên tục
+            await ReturnToLobby();
         }
 
         private async Task LeaveRoomAsync()
@@ -443,6 +557,18 @@ namespace UNO_Client_WPF
             catch { }
         }
 
+        private async Task ReturnToLobby()
+        {
+            // Ngắt kết nối hoặc gửi lệnh rời phòng lên Firebase
+            await LeaveRoomAsync();
+
+            // Mở lại Lobby
+            LobbyWindow lobby = new LobbyWindow();
+            lobby.Show();
+
+            // Đóng cửa sổ game hiện tại
+            this.Close();
+        }
         private async void GameWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             await LeaveRoomAsync();
