@@ -53,38 +53,87 @@ namespace UNO_Client_WPF
 
         private async void btn_create_Click(object sender, RoutedEventArgs e)
         {
-            var name = tbRoomName.Text;
-            if (string.IsNullOrEmpty(name)) return;
+            var name = tbRoomName.Text.Trim();
+            if (string.IsNullOrEmpty(name))
+            {
+                MessageBox.Show("Vui lòng nhập tên phòng!");
+                return;
+            }
 
-            var room = new RoomInfo { name = name, Players = new List<string> { Session.UserEmail } };
+            //  Kiểm tra phòng đã tồn tại chưa
+            var checkRes = await client.GetAsync(
+                $"{FirebaseUrl}/rooms/{name}.json?auth={Session.IdToken}"
+            );
+
+            if (checkRes.IsSuccessStatusCode)
+            {
+                var content = await checkRes.Content.ReadAsStringAsync();
+                if (content != "null")
+                {
+                    MessageBox.Show("Tên phòng đã tồn tại!", "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+            }
+
+            //  Tạo phòng mới
+            var room = new RoomInfo
+            {
+                name = name,
+                Players = new List<string> { Session.UserEmail }
+            };
+
             var json = JsonConvert.SerializeObject(room);
-            await client.PutAsync($"{FirebaseUrl}/rooms/{name}.json?auth={Session.IdToken}", new StringContent(json, Encoding.UTF8, "application/json"));
 
-            // Vào game ngay
+            await client.PutAsync(
+                $"{FirebaseUrl}/rooms/{name}.json?auth={Session.IdToken}",
+                new StringContent(json, Encoding.UTF8, "application/json")
+            );
+
             OpenGame(name, room.Players);
         }
+
 
         private async void btn_join_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
             var room = btn.Tag as RoomInfo;
-            if (room.Players == null) room.Players = new List<string>();
-            if (!room.Players.Contains(Session.UserEmail)) room.Players.Add(Session.UserEmail);
 
-            // Cập nhật lại list player lên server
+            if (room.Players == null)
+                room.Players = new List<string>();
+
+            // Kiểm tra trước khi add
+            if (room.Players.Count >= 4)
+            {
+                MessageBox.Show("Phòng đã đủ 4 người!", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Nếu chưa có thì mới add
+            if (!room.Players.Contains(Session.UserEmail))
+                room.Players.Add(Session.UserEmail);
+
+            // Update server
             var json = JsonConvert.SerializeObject(room);
-            await client.PutAsync($"{FirebaseUrl}/rooms/{room.name}.json?auth={Session.IdToken}", new StringContent(json, Encoding.UTF8, "application/json"));
+            await client.PutAsync(
+                $"{FirebaseUrl}/rooms/{room.name}.json?auth={Session.IdToken}",
+                new StringContent(json, Encoding.UTF8, "application/json")
+            );
 
             OpenGame(room.name, room.Players);
         }
 
+
         private void OpenGame(string roomName, List<string> players)
         {
             timer.Stop();
-            GameWindow game = new GameWindow(roomName, players);
+            // chỉ truyền tên của người chơi hiện tại
+            GameWindow game = new GameWindow(roomName, Session.UserEmail);
             game.Show();
             this.Close();
         }
+
 
         private void btn_back_Click(object sender, RoutedEventArgs e)
         {
