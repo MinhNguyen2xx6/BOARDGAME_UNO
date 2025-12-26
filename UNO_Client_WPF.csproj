@@ -1,0 +1,156 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Background-hcn.jpg" />
+    <None Remove="Assets\Background.jpg" />
+    <None Remove="Assets\Blue_0.png" />
+    <None Remove="Assets\Blue_1.png" />
+    <None Remove="Assets\Blue_2.png" />
+    <None Remove="Assets\Blue_3.png" />
+    <None Remove="Assets\Blue_4.png" />
+    <None Remove="Assets\Blue_5.png" />
+    <None Remove="Assets\Blue_6.png" />
+    <None Remove="Assets\Blue_7.png" />
+    <None Remove="Assets\Blue_8.png" />
+    <None Remove="Assets\Blue_9.png" />
+    <None Remove="Assets\Blue_Draw.png" />
+    <None Remove="Assets\Blue_Reverse.png" />
+    <None Remove="Assets\Blue_Skip.png" />
+    <None Remove="Assets\d841d3fa-a631-4ecb-af3c-5c6cdbea61a4.jpg" />
+    <None Remove="Assets\Deck.png" />
+    <None Remove="Assets\FIX_Logo.png" />
+    <None Remove="Assets\GIao diện form lobby.png" />
+    <None Remove="Assets\Green_0.png" />
+    <None Remove="Assets\Green_1.png" />
+    <None Remove="Assets\Green_2.png" />
+    <None Remove="Assets\Green_3.png" />
+    <None Remove="Assets\Green_4.png" />
+    <None Remove="Assets\Green_5.png" />
+    <None Remove="Assets\Green_6.png" />
+    <None Remove="Assets\Green_7.png" />
+    <None Remove="Assets\Green_8.png" />
+    <None Remove="Assets\Green_9.png" />
+    <None Remove="Assets\Green_Draw.png" />
+    <None Remove="Assets\Green_Reverse.png" />
+    <None Remove="Assets\Green_Skip.png" />
+    <None Remove="Assets\luat-choi-huong-dan-choi-board-game-uno-co-ban-cho-nguoi-moi-choi-202112301351216807.jpg" />
+    <None Remove="Assets\luat-choi-huong-dan-choi-board-game-uno-co-ban-cho-nguoi-moi-choi-2021123013512168071.jpg" />
+    <None Remove="Assets\MISOXTEK.png" />
+    <None Remove="Assets\pause.jpg" />
+    <None Remove="Assets\Red_0.png" />
+    <None Remove="Assets\Red_1.png" />
+    <None Remove="Assets\Red_2.png" />
+    <None Remove="Assets\Red_3.png" />
+    <None Remove="Assets\Red_4.png" />
+    <None Remove="Assets\Red_5.png" />
+    <None Remove="Assets\Red_6.png" />
+    <None Remove="Assets\Red_7.png" />
+    <None Remove="Assets\Red_8.png" />
+    <None Remove="Assets\Red_9.png" />
+    <None Remove="Assets\Red_Draw.png" />
+    <None Remove="Assets\Red_Reverse.png" />
+    <None Remove="Assets\Red_Skip.png" />
+    <None Remove="Assets\Uno-Car-Party-Banner.jpg" />
+    <None Remove="Assets\uno-classic-logo.jpg" />
+    <None Remove="Assets\UNO_MainMenu.jpg" />
+    <None Remove="Assets\Wild.png" />
+    <None Remove="Assets\WildDrawFour.png" />
+    <None Remove="Assets\Wild_Draw.png" />
+    <None Remove="Assets\Yellow_0.png" />
+    <None Remove="Assets\Yellow_1.png" />
+    <None Remove="Assets\Yellow_2.png" />
+    <None Remove="Assets\Yellow_3.png" />
+    <None Remove="Assets\Yellow_4.png" />
+    <None Remove="Assets\Yellow_5.png" />
+    <None Remove="Assets\Yellow_6.png" />
+    <None Remove="Assets\Yellow_7.png" />
+    <None Remove="Assets\Yellow_8.png" />
+    <None Remove="Assets\Yellow_9.png" />
+    <None Remove="Assets\Yellow_Draw.png" />
+    <None Remove="Assets\Yellow_Reverse.png" />
+    <None Remove="Assets\Yellow_Skip.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Background-hcn.jpg" />
+    <Resource Include="Assets\Background.jpg" />
+    <Resource Include="Assets\Blue_0.png" />
+    <Resource Include="Assets\Blue_1.png" />
+    <Resource Include="Assets\Blue_2.png" />
+    <Resource Include="Assets\Blue_3.png" />
+    <Resource Include="Assets\Blue_4.png" />
+    <Resource Include="Assets\Blue_5.png" />
+    <Resource Include="Assets\Blue_6.png" />
+    <Resource Include="Assets\Blue_7.png" />
+    <Resource Include="Assets\Blue_8.png" />
+    <Resource Include="Assets\Blue_9.png" />
+    <Resource Include="Assets\Blue_Draw.png" />
+    <Resource Include="Assets\Blue_Reverse.png" />
+    <Resource Include="Assets\Blue_Skip.png" />
+    <Resource Include="Assets\d841d3fa-a631-4ecb-af3c-5c6cdbea61a4.jpg" />
+    <Resource Include="Assets\Deck.png" />
+    <Resource Include="Assets\FIX_Logo.png" />
+    <Resource Include="Assets\GIao diện form lobby.png" />
+    <Resource Include="Assets\Green_0.png" />
+    <Resource Include="Assets\Green_1.png" />
+    <Resource Include="Assets\Green_2.png" />
+    <Resource Include="Assets\Green_3.png" />
+    <Resource Include="Assets\Green_4.png" />
+    <Resource Include="Assets\Green_5.png" />
+    <Resource Include="Assets\Green_6.png" />
+    <Resource Include="Assets\Green_7.png" />
+    <Resource Include="Assets\Green_8.png" />
+    <Resource Include="Assets\Green_9.png" />
+    <Resource Include="Assets\Green_Draw.png" />
+    <Resource Include="Assets\Green_Reverse.png" />
+    <Resource Include="Assets\Green_Skip.png" />
+    <Resource Include="Assets\luat-choi-huong-dan-choi-board-game-uno-co-ban-cho-nguoi-moi-choi-202112301351216807.jpg" />
+    <Resource Include="Assets\luat-choi-huong-dan-choi-board-game-uno-co-ban-cho-nguoi-moi-choi-2021123013512168071.jpg" />
+    <Resource Include="Assets\MISOXTEK.png" />
+    <Resource Include="Assets\pause.jpg" />
+    <Resource Include="Assets\Red_0.png" />
+    <Resource Include="Assets\Red_1.png" />
+    <Resource Include="Assets\Red_2.png" />
+    <Resource Include="Assets\Red_3.png" />
+    <Resource Include="Assets\Red_4.png" />
+    <Resource Include="Assets\Red_5.png" />
+    <Resource Include="Assets\Red_6.png" />
+    <Resource Include="Assets\Red_7.png" />
+    <Resource Include="Assets\Red_8.png" />
+    <Resource Include="Assets\Red_9.png" />
+    <Resource Include="Assets\Red_Draw.png" />
+    <Resource Include="Assets\Red_Reverse.png" />
+    <Resource Include="Assets\Red_Skip.png" />
+    <Resource Include="Assets\Uno-Car-Party-Banner.jpg" />
+    <Resource Include="Assets\uno-classic-logo.jpg" />
+    <Resource Include="Assets\UNO_MainMenu.jpg" />
+    <Resource Include="Assets\Wild.png" />
+    <Resource Include="Assets\WildDrawFour.png" />
+    <Resource Include="Assets\Yellow_0.png" />
+    <Resource Include="Assets\Yellow_1.png" />
+    <Resource Include="Assets\Yellow_2.png" />
+    <Resource Include="Assets\Yellow_3.png" />
+    <Resource Include="Assets\Yellow_4.png" />
+    <Resource Include="Assets\Yellow_5.png" />
+    <Resource Include="Assets\Yellow_6.png" />
+    <Resource Include="Assets\Yellow_7.png" />
+    <Resource Include="Assets\Yellow_8.png" />
+    <Resource Include="Assets\Yellow_9.png" />
+    <Resource Include="Assets\Yellow_Draw.png" />
+    <Resource Include="Assets\Yellow_Reverse.png" />
+    <Resource Include="Assets\Yellow_Skip.png" />
+  </ItemGroup>
+
+</Project>
